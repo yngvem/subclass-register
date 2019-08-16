@@ -55,4 +55,5 @@ Here is a basic example of how to use the subclass register.
     
     suv = register['SUV'](horse_powers = 50)
 
-
+You can read more examples at the `documentation page
+<https://subclass-register.readthedocs.io/en/latest/?badge=latest>`_.

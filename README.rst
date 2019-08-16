@@ -14,9 +14,13 @@ Installation instructions
 
 The subclass register can be installed with ``pip``:
 
+.. code::
+
     pip install subclass-register
 
 by cloning this repo and running ``setup.py``
+
+.. code::
 
     git clone https:\\github.com\yngvem\subclass-register
     cd subclass-register

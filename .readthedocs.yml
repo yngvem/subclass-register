@@ -1,2 +1,2 @@
-git remote add origin https://github.com/yngvem/subclass-register.git
-git push -u origin master
+python:
+   setup_py_install: true

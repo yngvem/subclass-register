@@ -6,7 +6,7 @@ with open("README.rst") as f:
 
 setup(
     name="subclass-register",
-    version="1.0.0",
+    version="1.0.1",
     license="MIT",
     description=("Automatically log all new subclasses of a specified base class."),
     long_description=long_description,

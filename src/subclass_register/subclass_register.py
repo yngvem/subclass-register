@@ -122,8 +122,8 @@ class SubclassRegister:
 
     def __init__(self, class_name):
         """
-        Arguments:
-        ----------
+        Arguments
+        ---------
         class_name : str
             The name of the classes we register, e.g. layer or model.
             Used for errors.
@@ -132,40 +132,40 @@ class SubclassRegister:
         self.linked_base = None
         self.register = {}
 
-    def _get_items_by_similarity(self, class_):
-        def get_similarity(class__):
+    def _get_items_by_similarity(self, class_name):
+        def get_similarity(class_name_):
             return difflib.SequenceMatcher(
-                None, class_.lower(), class__.lower()
+                None, class_name.lower(), class_name_.lower()
             ).ratio()
 
         return sorted(self.register.keys(), key=get_similarity, reverse=True)
 
-    def _validate_class_in_register(self, class_):
-        if class_ not in self:
-            traceback = f"{class_} is not a valid name for a {self.class_name}."
+    def _validate_class_in_register(self, class_name):
+        if class_name not in self:
+            traceback = f"{class_name} is not a valid name for a {self.class_name}."
             traceback = f"{traceback} \nAvailable {self.class_name}s are (in decreasing similarity):"
 
-            sorted_items = self._get_items_by_similarity(class_)
+            sorted_items = self._get_items_by_similarity(class_name)
             for available in sorted_items:
                 traceback = f"{traceback}\n   * {available}"
 
             raise NotInRegisterError(traceback)
 
-    def __getitem__(self, class_):
-        self._validate_class_in_register(class_)
-        return self.register[class_]
+    def __getitem__(self, class_name):
+        self._validate_class_in_register(class_name)
+        return self.register[class_name]
 
-    def __delitem__(self, class_):
-        self._validate_class_in_register(class_)
-        del self.register[class_]
+    def __delitem__(self, class_name):
+        self._validate_class_in_register(class_name)
+        del self.register[class_name]
 
-    def __setitem__(self, name, class_):
+    def __setitem__(self, name, class_name):
         if name in self.register:
             raise ValueError(f"Cannot register two classes with the same name")
-        self.register[name] = class_
+        self.register[name] = class_name
 
-    def __contains__(self, class_):
-        return class_ in self.register
+    def __contains__(self, class_name):
+        return class_name in self.register
 
     def __iter__(self):
         return iter(self.register)
@@ -215,6 +215,8 @@ class SubclassRegister:
         return cls
 
     def skip(self, cls):
+        """Decorator used to signal that the class shouldn't be added to the register.
+        """
         if not self.linked:
             raise RuntimeError(
                 "The register must be linked to a base class before a subclass can be skipped."

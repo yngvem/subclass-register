@@ -1,6 +1,11 @@
 Subclass Register
 =================
 
+.. image:: https://readthedocs.org/projects/subclass-register/badge/?version=latest
+:target: https://subclass-register.readthedocs.io/en/latest/?badge=latest
+:alt: Documentation Status
+      
+
 Motivation
 ----------
 

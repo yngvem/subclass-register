@@ -29,6 +29,8 @@ Example
 
 Here is a basic example of how to use the subclass register.
 
+.. code:: python
+
     from subclass_register import SubclassRegister
 
     

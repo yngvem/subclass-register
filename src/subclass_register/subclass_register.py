@@ -16,10 +16,11 @@ class SubclassRegister:
     Use the `SubclassRegister.link` decorator to link a base class with
     the register.
 
-    Example:
+    Examples
     --------
     We create the register as any other class and link it to a base class using
     the ``link_base`` decorator.
+
     >>> register = SubclassRegister('car')
     >>> @register.link_base
     ... class BaseCar:
@@ -32,24 +33,29 @@ class SubclassRegister:
     ...         self.num_seats = num_seats
     
     We can also ommit adding a class from the register, using the skip decorator.
+
     >>> @register.skip
     ... class SportsCar(BaseCar):
     ...     def __init__(self, horse_powers):
     ...         self.horse_powers = horse_powers
 
     The available classes attribute returns a tuple with the class-names in the register
+
     >>> register.available_classes
     ('SUV', 'Sedan')
 
     Indexing works as if the register was a dictionary
+
     >>> register['SUV']
     <class 'subclass_register.subclass_register.SUV'>
 
     We can also check if elements are in the register
+
     >>> 'SUV' in register
     True
 
     And delete them from the register
+
     >>> del register['SUV']
     >>> 'SUV' in register
     False
@@ -57,6 +63,7 @@ class SubclassRegister:
     ('Sedan',)
 
     We can also manually add classes to the register
+
     >>> register['SUV'] = SUV
     >>> 'SUV' in register
     True
@@ -64,12 +71,14 @@ class SubclassRegister:
     ('Sedan', 'SUV')
 
     But we can not overwrite already existing classes in the register
+
     >>> register['SUV'] = SUV
     Traceback (most recent call last):
       ...
     ValueError: Cannot register two classes with the same name
 
     If we use a name that is not in the register, we get an error and a list of the available classes sorted by similarity (using difflib)
+
     >>> register['sedan'] # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
       ...
@@ -79,6 +88,7 @@ class SubclassRegister:
        * SUV
 
     Similarly, if we try to access a class that we skipped, we get the same error.
+
     >>> register['SportsCar'] # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
       ...
@@ -88,12 +98,14 @@ class SubclassRegister:
        * SUV
 
     When we iterate over the register, we iterate over the class names
+
     >>> for car in register:
     ...     print(car)
     Sedan
     SUV
 
     We can also iterate over the register using dictionary-style methods
+
     >>> for car, Car in register.items():
     ...     print(car, Car)
     Sedan <class 'subclass_register.subclass_register.Sedan'>
@@ -120,7 +132,7 @@ class SubclassRegister:
         self.linked_base = None
         self.register = {}
 
-    def get_items_by_similarity(self, class_):
+    def _get_items_by_similarity(self, class_):
         def get_similarity(class__):
             return difflib.SequenceMatcher(
                 None, class_.lower(), class__.lower()
@@ -128,23 +140,23 @@ class SubclassRegister:
 
         return sorted(self.register.keys(), key=get_similarity, reverse=True)
 
-    def validate_class__in_register(self, class_):
+    def _validate_class_in_register(self, class_):
         if class_ not in self:
             traceback = f"{class_} is not a valid name for a {self.class_name}."
             traceback = f"{traceback} \nAvailable {self.class_name}s are (in decreasing similarity):"
 
-            sorted_items = self.get_items_by_similarity(class_)
+            sorted_items = self._get_items_by_similarity(class_)
             for available in sorted_items:
                 traceback = f"{traceback}\n   * {available}"
 
             raise NotInRegisterError(traceback)
 
     def __getitem__(self, class_):
-        self.validate_class__in_register(class_)
+        self._validate_class_in_register(class_)
         return self.register[class_]
 
     def __delitem__(self, class_):
-        self.validate_class__in_register(class_)
+        self._validate_class_in_register(class_)
         del self.register[class_]
 
     def __setitem__(self, name, class_):
